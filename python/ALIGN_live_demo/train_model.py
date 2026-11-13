@@ -26,7 +26,9 @@ MAX_TOTAL_BYTES = 1024 * 1024 * 1024
 def input_csvs(source: Path):
     """Yield display name and bytes; ZIP entries are never extracted to disk."""
     if source.is_dir():
-        files = sorted(source.rglob("*.csv"))
+        # Excel's ~$ files contain lock metadata, not sensor observations.
+        files = sorted(p for p in source.rglob("*.csv")
+                       if p.is_file() and not p.name.startswith("~$"))
         if not files:
             raise ValueError(f"CSV 파일이 없습니다: {source}")
         total = 0
@@ -39,7 +41,8 @@ def input_csvs(source: Path):
     elif source.is_file() and source.suffix.lower() == ".zip":
         with zipfile.ZipFile(source) as archive:
             entries = sorted((x for x in archive.infolist()
-                              if not x.is_dir() and x.filename.lower().endswith(".csv")),
+                              if not x.is_dir() and x.filename.lower().endswith(".csv")
+                              and not Path(x.filename).name.startswith("~$")),
                              key=lambda x: x.filename)
             if not entries:
                 raise ValueError("ZIP 안에 CSV 파일이 없습니다.")

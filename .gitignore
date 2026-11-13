@@ -239,3 +239,12 @@ python/ALIGN_live_demo/models/hand_retrained/
 python/data_logger/data/
 results/
 .github-sync/
+
+# Excel / Office lock files are not measurement CSVs
+~$*
+
+# Publish this P01 baseline explicitly; other generated body models stay local
+!python/ALIGN_live_demo/models/body/
+python/ALIGN_live_demo/models/body/*
+!python/ALIGN_live_demo/models/body/model.json
+!python/ALIGN_live_demo/models/body/evaluation.json

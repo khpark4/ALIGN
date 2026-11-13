@@ -133,3 +133,15 @@ py evaluate_model.py --model models/hand/model.json --data "D:\ALIGN_hand_test" 
 | Tkinter 관련 오류 | Tk/Tcl 구성 요소가 포함된 Windows Python을 사용합니다. |
 
 PC가 절전 상태가 되지 않게 하고 실시간 수집 중에는 USB 연결을 유지하세요. 제작 환경에서 전처리, 재학습, 독립 평가, CSV 재생과 모의 직렬 통신을 검사했습니다. 실제 ESP32 연결과 사용자 PC에서의 창 표시는 아직 확인하지 못했습니다. 처음에는 CSV 재생으로 화면을 확인한 뒤 실제 COM 포트에 연결하세요.
+
+## 포함한 P01 착용 기준선
+
+`models/body/model.json`은 `data/body_P01`의 실제 착용 20세션으로 학습한 최근접 중심 분류기입니다. 5회 세션 분리 평가에서 293/400 구간 정답(73.25%), 불량 재현율 57.5%였습니다. 동일 P01의 세션 간 결과이며 다른 사람에 대한 정확도는 아닙니다.
+
+`run_demo.cmd`의 기본값은 계속 손 기울기 모델입니다. 창에서 **모델 선택 → models/body/model.json**을 고르거나, 이 폴더에서 다음 명령으로 실행합니다.
+
+```powershell
+py live_predict.py --port COM13 --model models/body/model.json
+```
+
+학습기는 폴더와 ZIP에서 Excel `~$*.csv` 임시 파일을 제외하지만, 실제 원본 CSV의 열·숫자·세션 검사는 유지합니다.

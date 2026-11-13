@@ -1,0 +1,25 @@
+{
+  "session_id": "20261113_180712_2ec67482",
+  "subject_id": "P01",
+  "label": 0,
+  "port": "COM13",
+  "baud": 115200,
+  "target_hz": 50,
+  "requested_seconds": 20.0,
+  "reason": "duration_complete",
+  "received_hz": 50.0000049950055,
+  "first_time_us": 5846216,
+  "last_time_us": 25866214,
+  "units": {
+    "acceleration": "g (includes gravity)",
+    "gyroscope": "deg/s"
+  },
+  "warnings": [],
+  "rows": 1002,
+  "missing_slots": 0,
+  "malformed": 0,
+  "read_fail_messages": 0,
+  "timing_anomalies": 0,
+  "near_full_scale_rows": 0,
+  "max_backlog_bytes": 145
+}

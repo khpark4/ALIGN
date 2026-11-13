@@ -7,6 +7,7 @@ from pathlib import Path
 import sys
 import tempfile
 import unittest
+import zipfile
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from common import CHANNELS, load_model
@@ -77,6 +78,26 @@ class TrainingTests(unittest.TestCase):
         for value in [mixed, bad]:
             with self.subTest(data=value[-100:]), self.assertRaises(ValueError):
                 read_session('bad.csv', value.encode('utf-8'))
+
+
+    def test_excel_lock_files_in_directory_are_not_training_samples(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data = self.build_data(tmp)
+            (data / '~$session0.csv').write_bytes(b'Excel lock metadata, not sensor CSV')
+            sessions = load_sessions(data)
+            self.assertEqual(len(sessions), 4)
+            self.assertEqual(evaluate(sessions, 'session')['windows'], 8)
+
+    def test_excel_lock_files_in_zip_are_not_training_samples(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            data = self.build_data(tmp)
+            archive = Path(tmp) / 'measurements.zip'
+            with zipfile.ZipFile(archive, 'w') as z:
+                for p in data.glob('*.csv'):
+                    z.write(p, 'sessions/' + p.name)
+                z.writestr('sessions/~$session0.csv', b'Excel lock metadata')
+            self.assertEqual(len(load_sessions(archive)), 4)
+
 
 
 if __name__ == '__main__':
